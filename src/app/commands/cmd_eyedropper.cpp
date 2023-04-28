@@ -62,7 +62,12 @@ void EyedropperCommand::pickSample(const Site& site,
     pref.eyedropper.channel();
 
   if (site.tilemapMode() == TilemapMode::Tiles) {
-    tile = picker.tile();
+    const doc::Sprite* sprite = site.sprite();
+    tile = sprite->selectedTile();
+    if (!sprite->selectedLayer()->cel(site.frame())->isVisible()) {
+      // If the selected layer is invisible, we return an empty tile
+      tile = doc::tile_t(0);
+    }
     return;
   }
 
